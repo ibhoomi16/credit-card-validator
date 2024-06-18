@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+bool isNumberString(const string& s) {
+    return !s.empty() && s.find_first_not_of("0123456789") == string::npos;
+}
+
+int main() {
+    string ccNumber;
+
+    cout << "This program uses the Luhn Algorithm to validate a CC number." << endl;
+    cout << "You can enter 'exit' anytime to quit." << endl;
+
+    while (true) {
+        cout << "Please enter a CC number to validate: ";
+        cin >> ccNumber;
+
+        if (ccNumber == "exit")
+            break;
+
+        if (!isNumberString(ccNumber)) {
+            cout << "Bad input! Please enter only digits." << endl;
+            continue;
+        }
+
+        int len = ccNumber.length();
+        int doubleEvenSum = 0;
+
+        // Step 1: Double every second digit from the right
+        for (int i = len - 2; i >= 0; i -= 2) {
+            int digit = ccNumber[i] - '0';
+            int dbl = digit * 2;
+            if (dbl > 9)
+                dbl = dbl - 9; // Sum of digits
+            doubleEvenSum += dbl;
+        }
+
+        // Step 2: Add every odd-placed digit
+        for (int i = len - 1; i >= 0; i -= 2) {
+            int digit = ccNumber[i] - '0';
+            doubleEvenSum += digit;
+        }
+
+        // Step 3: Check if sum is a multiple of 10
+        if (doubleEvenSum % 10 == 0) {
+            cout << "Valid!" << endl;
+        } else {
+            cout << "Invalid!" << endl;
+        }
+    }
+
+    return 0;
+}
